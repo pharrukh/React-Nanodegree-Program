@@ -88,7 +88,42 @@
         }
       }
 
-      const store = Redux.createStore(Redux.combineReducers({ todos, goals }));
+      const checker = (store) => (next) => (action) => {
+        if (
+          action.type === ADD_TODO &&
+          action.todo.name.toLowerCase().includes("bitcoin")
+        ) {
+          return alert("Nope, that is a bad idea.");
+        }
+
+        if (
+          action.type === ADD_GOAL &&
+          action.goal.name.toLowerCase().includes("bitcoin")
+        ) {
+          return alert("Nope, that is a bad idea.");
+        }
+
+        return next(action);
+      };
+
+      const motivator = (store) => (next) => (action) => {
+        if (action.type === ADD_GOAL) {
+          alert("That's a great goal!");
+        }
+        return next(action);
+      };
+
+      const reminder = (store) => (next) => (action) => {
+        if (action.type === ADD_TODO) {
+          alert(`Don't forget to ${action.todo.name}!`);
+        }
+        return next(action);
+      };
+
+      const store = Redux.createStore(
+        Redux.combineReducers({ todos, goals }),
+        Redux.applyMiddleware(checker, motivator, reminder)
+      );
 
       store.subscribe(() => {
         const { goals, todos } = store.getState();
@@ -146,7 +181,7 @@
         const text = document.createTextNode(goal.name);
 
         const removeBtn = createRemoveButton(() => {
-          store.dispatch(removeGoalAction(goal.id));
+          store.dispatch(removeGoalAction(todo.id));
         });
         item.appendChild(text);
         item.appendChild(removeBtn);
