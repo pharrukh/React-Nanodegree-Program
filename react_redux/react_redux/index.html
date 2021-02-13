@@ -9,7 +9,6 @@
     <script src="https://tylermcginnis.com/goals-todos-api/index.js"></script>
     <script src="https://unpkg.com/redux-thunk@2.2.0/dist/redux-thunk.min.js"></script>
     <script src="https://unpkg.com/react-redux@5.0.6/dist/react-redux.min.js"></script>
-
   </head>
   <body>
     <div id="app"></div>
@@ -22,163 +21,6 @@
           return v.toString(16);
         });
       };
-
-      // App Code
-      const ADD_TODO = "ADD_TODO";
-      const REMOVE_TODO = "REMOVE_TODO";
-      const TOGGLE_TODO = "TOGGLE_TODO";
-      const ADD_GOAL = "ADD_GOAL";
-      const REMOVE_GOAL = "REMOVE_GOAL";
-      const RECEIVE_DATA = "RECEIVE_DATA";
-
-      function addTodoAction(todo) {
-        return {
-          type: ADD_TODO,
-          todo,
-        };
-      }
-
-      function removeTodoAction(id) {
-        return {
-          type: REMOVE_TODO,
-          id,
-        };
-      }
-
-      function toggleTodoAction(id) {
-        return {
-          type: TOGGLE_TODO,
-          id,
-        };
-      }
-
-      function addGoalAction(goal) {
-        return {
-          type: ADD_GOAL,
-          goal,
-        };
-      }
-
-      function removeGoalAction(id) {
-        return {
-          type: REMOVE_GOAL,
-          id,
-        };
-      }
-
-      function receiveDataAction(todos, goals) {
-        return {
-          type: RECEIVE_DATA,
-          todos,
-          goals,
-        };
-      }
-
-      function todos(state = [], action) {
-        switch (action.type) {
-          case ADD_TODO:
-            return state.concat([action.todo]);
-          case REMOVE_TODO:
-            return state.filter((todo) => todo.id !== action.id);
-          case TOGGLE_TODO:
-            return state.map((todo) =>
-              todo.id !== action.id
-                ? todo
-                : Object.assign({}, todo, { complete: !todo.complete })
-            );
-          case RECEIVE_DATA:
-            return action.todos;
-          default:
-            return state;
-        }
-      }
-
-      function goals(state = [], action) {
-        switch (action.type) {
-          case ADD_GOAL:
-            return state.concat([action.goal]);
-          case REMOVE_GOAL:
-            return state.filter((goal) => goal.id !== action.id);
-          case RECEIVE_DATA:
-            return action.goals;
-          default:
-            return state;
-        }
-      }
-
-      function loading(state = true, action) {
-        switch (action.type) {
-          case RECEIVE_DATA:
-            return false;
-          default:
-            return state;
-        }
-      }
-
-      function handleDeleteTodo(todo) {
-        return (dispatch) => {
-          dispatch(removeTodoAction(todo.id));
-
-          return API.deleteTodo(todo.id).catch(() => {
-            dispatch(addTodoAction(todo));
-            alert("An error occurred. Try again.");
-          });
-        };
-      }
-
-      function handleToggleTodo(id) {
-        return (dispatch) => {
-          dispatch(toggleTodoAction(id));
-
-          return API.saveTodoToggle(id).catch(() => {
-            dispatch(toggleTodoAction(id));
-            alert("failed to toggle the todo!");
-          });
-        };
-      }
-
-      function handleAddTodo(name) {
-        return (dispatch) => {
-          return API.saveTodo(name)
-            .then((todo) => {
-              dispatch(addTodoAction(todo));
-            })
-            .catch(() => {
-              alert("There was an error. Try again.");
-            });
-        };
-      }
-
-      function handleRemoveGoal(goal) {
-        return (dispatch) => {
-          dispatch(removeGoalAction(goal.id));
-          return API.deleteGoal(goal.id).catch(() =>
-            dispatch(addGoalAction(goal))
-          );
-        };
-      }
-
-      function handleAddGoal(name) {
-        return (dispatch) => {
-          return API.saveTodo(name)
-            .then((goal) => {
-              dispatch(addGoalAction(goal));
-            })
-            .catch(() => {
-              alert("There was an error. Try again.");
-            });
-        };
-      }
-
-      function handleLoadData() {
-        return (dispatch) => {
-          Promise.all([API.fetchTodos(), API.fetchGoals()]).then(
-            ([todos, goals]) => {
-              dispatch(receiveDataAction(todos, goals));
-            }
-          );
-        };
-      }
 
       const store = Redux.createStore(
         Redux.combineReducers({ todos, goals, loading }),
@@ -291,7 +133,6 @@
       const ConnectedApp = ReactRedux.connect((store) => ({
         loading: store.loading,
       }))(App);
-
 
       ReactDOM.render(
         <ReactRedux.Provider store={store}>
