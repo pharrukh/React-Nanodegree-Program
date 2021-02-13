@@ -205,14 +205,13 @@
       class Todos extends React.Component {
         addItem = (e) => {
           e.preventDefault();
-          this.props.store.dispatch(handleAddTodo(this.input.value));
+          this.props.dispatch(handleAddTodo(this.input.value));
           this.input.value = "";
         };
 
-        removeItem = (todo) =>
-          this.props.store.dispatch(handleDeleteTodo(todo));
+        removeItem = (todo) => this.props.dispatch(handleDeleteTodo(todo));
 
-        toggleItem = (id) => this.props.store.dispatch(handleToggleTodo(id));
+        toggleItem = (id) => this.props.dispatch(handleToggleTodo(id));
 
         render() {
           return (
@@ -241,8 +240,7 @@
           this.input.value = "";
         };
 
-        removeItem = (goal) =>
-          this.props.dispatch(handleRemoveGoal(goal));
+        removeItem = (goal) => this.props.dispatch(handleRemoveGoal(goal));
 
         render() {
           return (
@@ -273,6 +271,19 @@
         }
       }
 
+      class ConnectedTodos extends React.Component {
+        render() {
+          return (
+            <Context.Consumer>
+              {(store) => {
+                const { todos } = store.getState();
+                return <Todos todos={todos} dispatch={store.dispatch} />;
+              }}
+            </Context.Consumer>
+          );
+        }
+      }
+
       class App extends React.Component {
         componentDidMount() {
           const { store } = this.props;
@@ -289,7 +300,7 @@
 
           return (
             <div>
-              <Todos todos={todos} store={store} />
+              <ConnectedTodos />
               <ConnectedGoals />
             </div>
           );
