@@ -5,7 +5,6 @@ import {
 } from '../actions/goals'
 import {
     RECEIVE_DATA,
-
 } from '../actions/shared'
 
 export function goals(state = [], action) {
