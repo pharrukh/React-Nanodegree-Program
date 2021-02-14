@@ -14,6 +14,9 @@ function receiveData(users, tweets) {
 
 export function handleLoadData() {
     return (dispatch) => {
-        getInitialData().then(({ users, tweets }) => dispatch(receiveData(users, tweets)))
+        getInitialData().then(({ users, tweets }) => {
+            const tweets_array = Object.values(tweets)
+            dispatch(receiveData(users, tweets_array))
+        })
     };
 }
