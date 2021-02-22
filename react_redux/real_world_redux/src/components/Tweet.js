@@ -1,26 +1,63 @@
-import React from 'react'
-import ReplyIcon from '@material-ui/icons/Reply';
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { formatDate, formatTweet } from '../utils/helpers'
+import { TiArrowBackOutline, TiHeartFullOutline, TiHeartOutline } from 'react-icons/ti'
 
-export default function Tweet({ tweet }) {
-    const date = new Date(tweet.timestamp)
-    return (<div className="tweet">
-        <div className="author">
-            <img className="avatar" src="https://tylermcginnis.com/would-you-rather/sarah.jpg" />
-        </div>
-        <div className="tweet-info">
-            <div >
-                <span>{tweet.author}</span>
-                <span> {date.toUTCString()}</span>
-                <div>
-                </div>
-                <p>{tweet.text}</p>
-                <div className="tweet-icons">
-                    <span className="tweet-icon"><ReplyIcon /></span>
-                    <span className="tweet-icon"><FavoriteIcon className="heart-button" /></span>
-                    <span>{tweet.likes.length || ''}</span>
+class Tweet extends Component {
+    handleLike = (e) => {
+        e.preventDefault()
+    }
+
+    toParent = (e, id) => {
+        e.preventDefault()
+    }
+
+    render() {
+        const { tweet } = this.props
+
+        if (tweet === null) {
+            return <p>This Tweet does not exist</p>
+        }
+
+        const {
+            name, avatar, timestamp, text, hasLiked, likes, replies, id, parent
+        } = tweet
+        return (
+            <div className="tweet">
+                <img src={avatar} alt={`Avatar of ${name}`} className='avatar' />
+                <div className="tweet-info">
+                    <div>
+                        <span>{name}</span>
+                        <div>{formatDate(timestamp)}</div>
+                        {parent && (
+                            <button className='replying-to' onClick={(e) => this.toParent(e, parent, id)}>
+                                Replying to @{parent.author}
+                            </button>)
+                        }
+                        <p>{text}</p>
+                    </div>
+                    <div className='tweet-icons'>
+                        <div >
+                            <TiArrowBackOutline className="tweet-icon" />
+                            <span>{replies !== 0 && replies}</span>
+                            <button className="heart-button" onClick={this.handleLike}>
+                                {hasLiked === true ?
+                                    <TiHeartFullOutline color="#e0245e" className="tweet-icon" /> :
+                                    <TiHeartOutline className="tweet-icon" />}
+                            </button>
+                            <span>{likes !== 0 && likes}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>)
+        )
+    }
 }
+
+function mapStateToProps({ authedUser, users, tweets }, { id }) {
+    const tweet = tweets[id]
+    const parentTweet = tweet ? tweets[tweet.replyingTo] : null
+    return { authedUser, tweet: tweet ? formatTweet(tweet, users[tweet.author], authedUser, parentTweet) : null }
+}
+
+export default connect(mapStateToProps)(Tweet)

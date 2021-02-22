@@ -2,23 +2,27 @@ import React, { Component } from 'react'
 import { handleLoadData } from '../actions/shared'
 import { connect } from 'react-redux'
 import TweetList from './TweetList'
+import Navigation from './Navigation'
+import LoadingBar from 'react-redux-loading'
+import NewTweet from './NewTweet'
 
 class App extends Component {
+
   componentDidMount() {
-    const { dispatch } = this.props;
-    dispatch(handleLoadData());
+    this.props.dispatch(handleLoadData());
   }
 
   render() {
     return (
       <div>
-        <TweetList tweets={this.props.tweets} />
+        <LoadingBar />
+        {this.props.loading === true ? null : <NewTweet />}
       </div>
     )
   }
 }
 
-
-export default connect((store) => ({
-  tweets: store.tweets,
-}))(App)
+function mapStateToProps({ authedUser }) {
+  return { loading: authedUser === null }
+}
+export default connect(mapStateToProps)(App)

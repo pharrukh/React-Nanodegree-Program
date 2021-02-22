@@ -47,6 +47,10 @@ a {
   font-weight: bold;
 }
 
+.nav {
+  margin-left: 2em;
+}
+
 .nav ul {
   display: flex;
   flex-direction: row;
@@ -88,6 +92,10 @@ li {
 
 .tweet-info {
   margin: 10px;
+}
+
+.tweet-info > div {
+  padding: 1px;
   display: flex;
   flex-direction: column;
 }
@@ -161,4 +169,8 @@ li {
   margin-top: 10px;
   font-size: 20px;
   color: #c3392a;
+}
+
+.red {
+  color: tomato;
 }

@@ -1,22 +1,20 @@
+import { getInitialData } from "../utils/api";
+import { receiveUsers } from './users'
+import { receiveTweets } from './tweets'
+import { setAuthedUser } from './authedUser'
+import { hideLoading, showLoading } from "react-redux-loading";
 
-
-import { getInitialData } from '../utils/api'
-
-export const RECEIVE_DATA = "RECEIVE_DATA"
-
-function receiveData(users, tweets) {
-    return {
-        type: RECEIVE_DATA,
-        users,
-        tweets,
-    };
-}
+const AUTH_ID = 'tylermcginnis'
 
 export function handleLoadData() {
-    return (dispatch) => {
-        getInitialData().then(({ users, tweets }) => {
-            const tweets_array = Object.values(tweets)
-            dispatch(receiveData(users, tweets_array))
-        })
-    };
+  return (dispatch) => {
+    dispatch(showLoading())
+    return getInitialData()
+      .then(({ users, tweets }) => {
+        dispatch(receiveUsers(users))
+        dispatch(receiveTweets(tweets))
+        dispatch(setAuthedUser(AUTH_ID))
+        dispatch(hideLoading())
+      });
+  };
 }
