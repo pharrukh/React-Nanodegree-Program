@@ -1,11 +1,16 @@
 
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 export default function Navigation() {
-    return (<div className="nav">
+    return (<nav className="nav">
         <ul>
-            <li className="active">Home</li>
-            <li>New Tweet</li>
+            <li>
+                <NavLink to='/' exact activeClassName="active">Home</NavLink>
+            </li>
+            <li>
+                <NavLink to='/new' exact activeClassName="active">New Tweet</NavLink>
+            </li>
         </ul>
-    </div>)
+    </nav>)
 }
