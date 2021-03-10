@@ -1,0 +1,10 @@
+{
+  "name": "UdaciFitness",
+  "displayName": "UdaciFitness",
+  "expo": {
+    "name": "UdaciFitness",
+    "slug": "expo-template-bare",
+    "version": "1.0.0",
+    "assetBundlePatterns": ["**/*"]
+  }
+}

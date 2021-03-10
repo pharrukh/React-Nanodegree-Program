@@ -8,6 +8,8 @@ import LoadingBar from 'react-redux-loading'
 import NewTweet from './NewTweet'
 import TweetPage from './TweetPage'
 import Nav from './Navigation'
+import ReactLoading from 'react-loading';
+
 class App extends Component {
 
   componentDidMount() {
